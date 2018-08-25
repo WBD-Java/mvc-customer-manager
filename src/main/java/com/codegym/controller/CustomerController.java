@@ -31,9 +31,27 @@ public class CustomerController extends HttpServlet {
                 updateCustomer(request, response);
                 break;
             case "delete":
+                removeCustomer(request, response);
                 break;
             default:
                 break;
+        }
+
+    }
+
+    private void removeCustomer(HttpServletRequest request, HttpServletResponse response) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Customer customer = this.customerService.findById(id);
+        RequestDispatcher dispatcher;
+        if (customer == null) {
+            dispatcher = request.getRequestDispatcher("error.404.jsp");
+        } else {
+            customerService.remove(id);
+            try {
+                response.sendRedirect("/customers");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
