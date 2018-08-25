@@ -25,6 +25,7 @@ public class CustomerController extends HttpServlet {
 
         switch (action) {
             case "create":
+                createCustomer(request, response);
                 break;
             case "edit":
                 break;
@@ -34,6 +35,25 @@ public class CustomerController extends HttpServlet {
                 break;
         }
 
+    }
+
+    private void createCustomer(HttpServletRequest request, HttpServletResponse response) {
+        int id = (int) (Math.random() * 1000);
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+
+        Customer customer = new Customer(id, name, email, address);
+        this.customerService.save(customer);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/create.jsp");
+        request.setAttribute("message", "New Customer was create!");
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
